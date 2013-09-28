@@ -1,11 +1,14 @@
+
 function loadSettingsModule(appModule,name,settings) {
+    var moduleSettings = null;
     try {
-        appModule.require.resolve(name)
+        moduleSettings = appModule.require(name)
     } catch(e){
-        //settings module does not exist
-        return settings;
+        if (e.code && e.code == "MODULE_NOT_FOUND" ){
+            return settings;
+        }
+        throw e;
     }
-    var moduleSettings = appModule.require(name)
     moduleSettings.config(settings)
 }
 module.exports.loadApp = function(app,settings,cb){

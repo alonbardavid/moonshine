@@ -7,7 +7,7 @@ module.exports.before = function(cb){
     try {
         lograp.rootPath = settings.LOGGING_ROOT_PATH;
         winston.remove(winston.transports.Console)
-        winston.addColors(LOGGING_WINSTON_COLOR)
+        winston.addColors(settings.LOGGING_WINSTON_COLOR)
         winston.add(winston.transports.Console,{
             level:settings.LOGGING_LOG_LEVEL,
             handleExceptions: true,

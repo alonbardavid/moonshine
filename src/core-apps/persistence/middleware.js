@@ -9,12 +9,13 @@ module.exports.before = function setupPersistence(cb){
         Schema: mongoose.Schema,
         native: mongoose
     }
+    cb()
 }
-var models = moonshine.persistence.models
 
-module.exports.process = moonshine.helpers.middlware.genericLoadAppfunction("model",logger);
+module.exports.process = moonshine.helpers.middleware.genericLoadAppFunction("model",logger);
 
 module.exports.after = function registerSchemas(cb){
+    var models = moonshine.persistence.models
     try {
         for (var modelName in models) {
             var model = models[modelName]

@@ -14,8 +14,9 @@ module.exports.before = function setupApi(cb){
         },
         native: baucis
     }
+    cb()
 }
-module.exports.process = moonshine.helpers.middlware.genericLoadAppfunction("api",logger);
+module.exports.process = moonshine.helpers.middleware.genericLoadAppFunction("api",logger);
 
 module.exports.after = function addApiToServer(cb){
     try {

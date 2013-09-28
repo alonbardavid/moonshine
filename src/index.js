@@ -20,14 +20,25 @@ module.exports.defineApp =function(appModule,options){
     }
     return AppTree.setupNode(appModule,{apps:moonApps})
 }
+var logger = {
+    debug:function(){}, // don't log debug to console
+    info:function(msg){console.log(msg)},
+    error:function(msg,err){
+        console.log(msg)
+        console.log(err.stack)
+    }
+};
+var lograpLoggerInitialized = false
+function getLogger() {
+    if (!lograpLoggerInitialized && module.exports.logFactory) {
+        logger = module.exports.logFactory()
+        lograpLoggerInitialized = true
+    }
+    return logger;
+}
 function handleError(err) {
     if (err) {
-        if (module.exports.logFactory) {
-            var logger = module.exports.logFactory()
-            logger.error("caught error while processing apps",err)
-        } else {
-            console.log("moonshine caught error while processing apps: " + err)
-        }
+        getLogger().error("caught error while processing apps",err)
         process.exit()
     }
 }
@@ -35,22 +46,18 @@ var appTree = null;
 module.exports.start = function() {
     console.log("loading moonshine")
     appTree = getDependencyTree()
-    async.eachSeries(
+    async.series(
         [
             loadSettings,
             applyMiddlewarePerModule,
             applyMiddlewarePost
         ]
         ,handleError)
-    loadSettings(function(err){
-        if (err) return handleError(err);
-        applyAppProcessors()
-    })
 }
 function getDependencyTree() {
-    var appTree = AppTree()
-    var rootDir = require.main?path.dirname(require.main.filename):process.cwd()
-    appTree.loadTree({root:rootDir})
+    var appTree = new AppTree()
+    var rootDir = require.main?require.main.filename:process.cwd()
+    appTree = appTree.loadTree({root:rootDir})
     //add moonshine foundation to the begining of the dependency tree
     appTree.addDependency([foundationApp].concat(getCoreApps()),true);
     return appTree;
@@ -68,18 +75,20 @@ function loadSettings(cb){
     console.log("loading moonshine settings")
     var settings = module.exports.settings = {}
     settings.environment = configProcessor.getEnvironment()
-    appTree.applyProcessor(function(app){
-        configProcessor.loadApp(app,settings,handleError)
+    appTree.applyProcessor(function(app,cb){
+        configProcessor.loadApp(app,settings,cb)
     },cb)
 }
 function applyMiddlewarePerModule(cb) {
     async.forEachSeries(module.exports.settings.middleware
         ,function(processor,cb){
+            getLogger().debug("applying middleware:" + processor)
             async.series(getTaskListFromProcessor(processor),cb)
         }
         ,cb)
 }
 function getTaskListFromProcessor(processor) {
+    processor = require(processor)
     var tasks = []
     if (processor.before) tasks.push(processor.before)
     if (processor.process)
@@ -92,6 +101,7 @@ function getTaskListFromProcessor(processor) {
 function applyMiddlewarePost(cb) {
     async.forEachSeries(module.exports.settings.middleware
         ,function(processor,cb){
+            processor = require(processor)
             if (processor.post) {
                 processor.post(cb)
             } else {
@@ -102,5 +112,5 @@ function applyMiddlewarePost(cb) {
 }
 
 module.exports.helpers = {
-    middleware: require("./helpers/middlware-helper")
+    middleware: require("./helpers/middleware-helper")
 }

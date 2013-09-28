@@ -7,27 +7,34 @@ var fs = require("fs"),
 
 var models = moonshine.persistence.models
 var paths = {}
-module.exports.process = function collectStatic(module,cb){
-    var staticDir = path.join(path.dirname(module.filename),"static")
-    collectDirPaths(staticDir,"",cb)
+module.exports.process = function collectStatic(app,cb){
+    try{
+        var staticDir = path.join(path.dirname(app.module.filename),"static")
+        collectDirPaths(staticDir,"",cb)
+    } catch(e){
+        cb(e)
+    }
 }
 function collectDirPaths(absoluteDirPath,baseUrl,cb) {
-    fs.readdir(absoluteDirPath,function(err,dirContents){
-        if (err) cb(err)
-        async.forEachSeries(dirContents
-            ,function(filename,cb){
-                fs.stat(path.join(absolutePath,filename),function(err,stat){
-                    if(stat.isDirectory()) {
-                        processDir(path.join(absolutePath,filename),baseUrl + "/" + filename,cb)
-                    } else {
-                        files[baseUrl + "/" + filename] = path.join(absolutePath,filename)
-                        cb()
-                    }
-                })
-            },cb)
+    fs.exists(absoluteDirPath,function(exists){
+        if (!exists) return cb()
+        fs.readdir(absoluteDirPath,function(err,dirContents){
+            if (err) cb(err)
+            async.forEachSeries(dirContents
+                ,function(filename,cb){
+                    fs.stat(path.join(absoluteDirPath,filename),function(err,stat){
+                        if(stat.isDirectory()) {
+                            collectDirPaths(path.join(absoluteDirPath,filename),baseUrl + "/" + filename,cb)
+                        } else {
+                            paths[baseUrl + "/" + filename] = path.join(absoluteDirPath,filename)
+                            cb()
+                        }
+                    })
+                },cb)
+        })
     })
 }
-module.exports.after = function registerSchemas(cb){
+module.exports.after = function setupRouter(cb){
     moonshine.server.app.use(settings.STATIC_ROOTPATH,function(req,res,next){
         var path = req.path.replace(settings.STATIC_ROOTPATH,"")
         if (paths[path]){
@@ -36,4 +43,5 @@ module.exports.after = function registerSchemas(cb){
             next()
         }
     })
+    cb()
 }

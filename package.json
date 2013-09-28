@@ -1,6 +1,6 @@
 {
   "name": "moonshine-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Illniyar",
   "description": "a web framework for rapid development of SPA apps with angular.js,node and mongodb",
 
@@ -29,7 +29,8 @@
     "lograp":"*",
     "winston":"*",
     "mongoose":"*",
-    "baucis":"*"
+    "baucis":"*",
+    "express":"*"
   },
   "main":"./src",
   "devDependencies": [

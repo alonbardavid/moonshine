@@ -8,17 +8,22 @@ module.exports.before = function setupExpress(cb){
         app:express(),
         native:express
     }
+    cb()
 }
 
 module.exports.post = function startListening(cb){
-    var httpServer =http.createServer(moonshine.server)
-    server.listen(settings.SERVER_PORT)
-    server.on("listening",function(){
-        logger.info("Server listening on port %d in %s modes",server.address().port,settings.env)
-        cb()
-    })
-    server.on("error",function(err){
-        logger.error("could not start server, got exception binding address",err);
-        cb(err)
-    })
+    try {
+        var httpServer =http.createServer(moonshine.server.app)
+        httpServer.listen(settings.SERVER_PORT)
+        httpServer.on("listening",function(){
+            logger.info("Server listening on port %d in %s modes",httpServer.address().port,settings.env)
+            cb()
+        })
+        httpServer.on("error",function(err){
+            logger.error("could not start server, got exception binding address",err);
+            cb(err)
+        })
+    } catch(e){
+        cb(e)
+    }
 }
