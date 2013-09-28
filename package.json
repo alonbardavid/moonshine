@@ -1,0 +1,41 @@
+{
+  "name": "moonshine-js",
+  "version": "0.0.1",
+  "author": "Illniyar",
+  "description": "a web framework for rapid development of SPA apps with angular.js,node and mongodb",
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Illniyar/moonshine"
+  },
+  "licenses": {
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/MIT"
+  },
+  "homepage": "https://github.com/Illniyar/moonshine",
+  "keywords": [
+    "framework",
+    "spa",
+    "mean",
+    "django",
+    "rapid"
+  ],
+  "dependencies": {
+    "grunt":"*",
+	"npm":"*",
+	"async":"*",
+	"fs-extra":"*",
+    "optimist":"*",
+    "lograp":"*",
+    "winston":"*",
+    "mongoose":"*",
+    "baucis":"*"
+  },
+  "main":"./src",
+  "devDependencies": [
+    "mocha"
+  ],
+  "scripts": {
+        "test": "mocha --harmony-proxies --recursive --reporter Spec"
+    }
+}

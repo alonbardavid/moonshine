@@ -1,0 +1,1 @@
+module.exports = require("../../../src/foundation/app-tree").setupNode(module,{apps:["dependentApp","nondependentApp"]})
