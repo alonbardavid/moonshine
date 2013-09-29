@@ -21,6 +21,7 @@ module.exports.after = function registerSchemas(cb){
             var model = models[modelName]
             moonshine.persistence.models[modelName] = mongoose.model(modelName,model)
         }
+        mongoose.connect(settings.PERSISTENCE_CONNECTION);
         cb()
     } catch (err) {
         cb(err)

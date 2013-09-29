@@ -8,7 +8,7 @@ module.exports.before = function setupApi(cb){
     moonshine.api = {
         resources:{},
         createResource: function(name,options){
-            var resource = baucis.rest(options);
+            var resource = baucis.rest(name,options);
             moonshine.api.resources[name] = resource
             return resource;
         },

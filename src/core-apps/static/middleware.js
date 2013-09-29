@@ -38,7 +38,7 @@ module.exports.after = function setupRouter(cb){
     moonshine.server.app.use(settings.STATIC_ROOTPATH,function(req,res,next){
         var path = req.path.replace(settings.STATIC_ROOTPATH,"")
         if (paths[path]){
-            res.sendFile(paths[path])
+            res.sendfile(paths[path])
         }else {
             next()
         }
