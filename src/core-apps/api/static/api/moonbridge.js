@@ -1,4 +1,4 @@
-var moonbridge = angular.module("api.moonbridge",["ngResource",'restangular']);
+var moonbridge = angular.module("api.moonbridge",['restangular']);
 moonbridge.config(["RestangularProvider",function(RestangularProvider){
     RestangularProvider.setRestangularFields({
         id: "_id"
