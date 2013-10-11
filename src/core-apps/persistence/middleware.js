@@ -6,6 +6,14 @@ var mongoose = require("mongoose")
 module.exports.before = function setupPersistence(cb){
     moonshine.persistence = {
         models: {},
+        schemas: {},
+        getSchema: function(name){
+            var schemas = moonshine.persistence.schemas;
+            if (!schemas[name]) {
+                schemas[name] = new mongoose.Schema({})
+            }
+            return schemas[name];
+        },
         Schema: mongoose.Schema,
         native: mongoose
     }
@@ -15,11 +23,11 @@ module.exports.before = function setupPersistence(cb){
 module.exports.process = moonshine.helpers.middleware.genericLoadAppFunction("model",logger);
 
 module.exports.after = function registerSchemas(cb){
-    var models = moonshine.persistence.models
+    var schemas = moonshine.persistence.schemas
     try {
-        for (var modelName in models) {
-            var model = models[modelName]
-            moonshine.persistence.models[modelName] = mongoose.model(modelName,model)
+        for (var modelName in schemas) {
+            var schema = schemas[modelName]
+            moonshine.persistence.models[modelName] = mongoose.model(modelName,schema)
         }
         mongoose.connect(settings.PERSISTENCE_CONNECTION);
         cb()

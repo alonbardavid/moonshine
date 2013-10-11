@@ -13,7 +13,7 @@ module.exports.defineApp =function(appModule,options){
     if(!appModule) throw new Error("when defining an app, you must pass the module instance")
     var moonApps = [];
     try {
-        var package = options.package || appModule.require("package.json")
+        var package = options.package || appModule.require("./package")
         moonApps = package.moonApps || []
     } catch(e) {
         //no package.json
