@@ -3,9 +3,8 @@ var settings = moonshine.settings
 var logger = moonshine.logFactory()
 var baucis = require("baucis")
 
-module.exports.before = function setupApi(cb){
-
-    moonshine.api = {
+module.exports.pre = function setupApi(cb){
+    moonshine.registerService("api",{
         resources:{},
         resourceOptions:{},
         createResource: function(name,options){
@@ -15,7 +14,7 @@ module.exports.before = function setupApi(cb){
             return resource;
         },
         native: baucis
-    }
+    })
     cb()
 }
 module.exports.process = moonshine.helpers.middleware.genericLoadAppFunction("api",logger);

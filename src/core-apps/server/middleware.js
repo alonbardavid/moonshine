@@ -3,11 +3,11 @@ var settings = moonshine.settings
 var logger = moonshine.logFactory()
 var express = require("express")
     , http = require('http');
-module.exports.before = function setupExpress(cb){
-    moonshine.server = {
+module.exports.pre = function setupExpress(cb){
+    moonshine.registerService("server",{
         app:express(),
         native:express
-    }
+    })
     cb()
 }
 

@@ -3,8 +3,8 @@ var settings = moonshine.settings
 var logger = moonshine.logFactory()
 var mongoose = require("mongoose")
 
-module.exports.before = function setupPersistence(cb){
-    moonshine.persistence = {
+module.exports.pre = function setupPersistence(cb){
+    moonshine.registerService("persistence",{
         models: {},
         schemas: {},
         getSchema: function(name){
@@ -16,7 +16,7 @@ module.exports.before = function setupPersistence(cb){
         },
         Schema: mongoose.Schema,
         native: mongoose
-    }
+    })
     cb()
 }
 

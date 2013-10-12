@@ -37,6 +37,14 @@
     "mocha"
   ],
   "scripts": {
-        "test": "mocha --harmony-proxies --recursive --reporter Spec"
-    }
+    "test": "mocha --harmony-proxies --recursive --reporter Spec"
+  },
+  "moonApps": [
+    "./core-apps/base",
+    "./core-apps/logging",
+    "./core-apps/persistence",
+    "./core-apps/server",
+    "./core-apps/api",
+    "./core-apps/static"
+  ]
 }

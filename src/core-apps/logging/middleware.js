@@ -3,7 +3,7 @@ var lograp = require("lograp"),
 var moonshine = require("../../")
 var settings = moonshine.settings
 
-module.exports.before = function(cb){
+module.exports.pre = function(cb){
     try {
         lograp.rootPath = settings.LOGGING_ROOT_PATH;
         winston.remove(winston.transports.Console)
