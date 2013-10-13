@@ -21,7 +21,8 @@ var moonshineApp = defineApp(module,{package:require("../package")})
 
 module.exports.start = function() {
     loggerWrapper.logger.info("loading moonshine")
-    return appLoader.start(moonshineApp)
+    var rootDir = require.main?require.main.filename:process.cwd()
+    return appLoader.start(rootDir,moonshineApp)
 }
 
 module.exports.helpers = {

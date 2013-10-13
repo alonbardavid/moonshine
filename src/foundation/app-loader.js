@@ -3,10 +3,16 @@ var DepTree = require("./dep-tree"),
     MiddlwareLoader = require("./middleware-loader"),
     async = require("async")
 
-function AppLoader(logger){
+function AppLoader(logger,middlewareFunctionNames){
     this.depTree = null
     this.settings = {}
     this.logger = logger;
+    this.mfn = middlewareFunctionNames || {}
+    this.mfn.pre = this.mfn.pre || "pre"
+    this.mfn.before = this.mfn.before || "before"
+    this.mfn.process = this.mfn.process || "process"
+    this.mfn.after = this.mfn.after || "after"
+    this.mfn.post = this.mfn.post || "post"
 }
 AppLoader.prototype.defineApp =function(appModule,options){
     options = options || {}
@@ -22,19 +28,21 @@ AppLoader.prototype.defineApp =function(appModule,options){
     return DepTree.setupNode(appModule,{apps:dependsOnApps})
 }
 
-AppLoader.prototype.start = function() {
-    this.depTree = finalizeDepTree(Array.prototype.slice.call(arguments));
-    this.loadSettings(this.afterLoadSettings)
+AppLoader.prototype.start = function(rootDir) {
+    this.depTree = finalizeDepTree(rootDir,Array.prototype.slice.call(arguments,1));
+    this.loadSettings(
+        this.afterLoadSettings) //cb
 }
 AppLoader.prototype.afterLoadSettings = function(err) {
+    if (!this.settings.middleware) return; //no middlewares to run
     var self = this;
     if (err) return this.handleError(err)
     var middlewareLoader = new MiddlwareLoader(this.settings.middleware,this.depTree,this.logger)
     async.series(
         [
-            middlewareLoader.applyMiddlewareFunction("pre"),
-            middlewareLoader.applyMiddlewareProcessor("before","process","after"),
-            middlewareLoader.applyMiddlewareFunction("post")
+            middlewareLoader.applyMiddlewareFunction(this.mfn.pre),
+            middlewareLoader.applyMiddlewareProcessor(this.mfn.before,this.mfn.process,this.mfn.after),
+            middlewareLoader.applyMiddlewareFunction(this.mfn.post)
         ]
         ,function(err){self.handleError(err)})
 }
@@ -54,10 +62,9 @@ AppLoader.prototype.loadSettings = function(cb){
         cb.apply(self,err)
     })
 }
-function finalizeDepTree(additionalApps) {
-    var rootDir = require.main?require.main.filename:process.cwd()
+function finalizeDepTree(rootDir,additionalApps) {
     var depTree = DepTree.loadTree({root:rootDir})
-    additionalApps.forEach(function(app){
+    additionalApps.reverse().forEach(function(app){
         depTree.addDependencies(app,true);
     })
     return depTree;

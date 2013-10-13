@@ -1,0 +1,1 @@
+global._no_function_middleware_called = true
