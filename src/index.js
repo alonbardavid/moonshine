@@ -19,10 +19,18 @@ var defineApp =module.exports.defineApp =function(appModule,options){
 var moonshineApp = defineApp(module,{package:require("../package")})
 
 
-module.exports.start = function() {
+module.exports.start = function(noCoreApps,rootFile,additonalApps) {
+
     loggerWrapper.logger.info("loading moonshine")
-    var rootDir = require.main?require.main.filename:process.cwd()
-    return appLoader.start(rootDir,moonshineApp)
+    if(!rootFile) rootFile = require.main?require.main.filename:process.cwd()
+    var args = [rootFile]
+    if (!noCoreApps) {
+        args =args.concat(moonshineApp)
+    }
+    if (additonalApps) {
+        args =args.concat(additonalApps)
+    }
+    return appLoader.start.apply(appLoader,args)
 }
 
 module.exports.helpers = {

@@ -1,7 +1,7 @@
 var assert = require("assert")
 var logger = {
-    debug:console.log,
-    info:console.log,
+    debug:function(msg){},
+    info:function(msg){},
     error: function(msg,err) {console.log(msg);console.log(err)}
 }
 describe("test loading apps",function(){
@@ -24,11 +24,13 @@ describe("test loading apps",function(){
         var appLoader =  new AppLoader(logger)
         appLoader.start(root,require("./_app-loader/noPackageModule"),require("./_app-loader/filenameMiddleware"))
         var loadedModules = require("./_app-loader/filenameMiddleware/node_modules/filenameMiddleware/middleware").collected
-        assert.equal(loadedModules.length,4)
-        assert.ok(loadedModules[0].indexOf("noPackageModule")>=0)
-        assert.ok(loadedModules[1].indexOf("filenameMiddleware")>=0)
-        assert.ok(loadedModules[2].indexOf("sample_app")>=0)
-        assert.ok(loadedModules[3].indexOf("simpleModule")>=0 && loadedModules[3].indexOf("sample_app") < 0)
+        assert.equal(loadedModules.length,6)
+        assert.ok(loadedModules[0].match(/.*noPackageModule.*sample_app2/))
+        assert.ok(loadedModules[1].match(/.*noPackageModule.index\.js/))
+        assert.ok(loadedModules[2].match(/.*filenameMiddleware.*filenameMiddleware/))
+        assert.ok(loadedModules[3].match(/.*filenameMiddleware.index\.js/))
+        assert.ok(loadedModules[4].match(/.*simpleModule.*sample_app/))
+        assert.ok(loadedModules[5].match(/.*simpleModule.index\.js/))
         done()
     })
 })

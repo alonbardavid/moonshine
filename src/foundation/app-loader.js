@@ -28,8 +28,8 @@ AppLoader.prototype.defineApp =function(appModule,options){
     return DepTree.setupNode(appModule,{apps:dependsOnApps})
 }
 
-AppLoader.prototype.start = function(rootDir) {
-    this.depTree = finalizeDepTree(rootDir,Array.prototype.slice.call(arguments,1));
+AppLoader.prototype.start = function(rootApp) {
+    this.depTree = finalizeDepTree(rootApp,Array.prototype.slice.call(arguments,1));
     this.loadSettings(
         this.afterLoadSettings) //cb
 }
@@ -56,15 +56,17 @@ AppLoader.prototype.loadSettings = function(cb){
     this.logger.debug("loading settings")
     var self = this
     this.settings.environment = configProcessor.getEnvironment()
+    this.settings.middleware = []
     this.depTree.applyProcessor(function(app,cb){
         configProcessor.loadApp(app,self.settings,cb)
     },function(err){
         cb.apply(self,err)
     })
 }
-function finalizeDepTree(rootDir,additionalApps) {
-    var depTree = DepTree.loadTree({root:rootDir})
+function finalizeDepTree(rootApp,additionalApps) {
+    var depTree = DepTree.loadTree({root:rootApp})
     additionalApps.reverse().forEach(function(app){
+        depTree.addDependency(app,true)
         depTree.addDependencies(app,true);
     })
     return depTree;
