@@ -1,6 +1,6 @@
 {
   "name": "moonshine-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Illniyar",
   "description": "a web framework for rapid development of SPA apps with angular.js,node and mongodb",
 

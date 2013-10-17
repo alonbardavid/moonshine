@@ -7,6 +7,7 @@ module.exports.pre = function(cb){
     try {
         lograp.rootPath = settings.LOGGING_ROOT_PATH;
         winston.addColors(settings.LOGGING_WINSTON_COLOR)
+        winston.remove(winston.transports.Console)
         if (settings.LOGGING_SETUP_TRANSPORTS) {
             settings.LOGGING_SETUP_TRANSPORTS(winston)
         } else {
@@ -16,7 +17,6 @@ module.exports.pre = function(cb){
                 colorize: true
             })
         }
-        winston.remove(winston.transports.Console)
         moonshine.logging ={
             native: winston
         }

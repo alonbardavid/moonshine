@@ -56,7 +56,6 @@ AppLoader.prototype.loadSettings = function(cb){
     this.logger.debug("loading settings")
     var self = this
     this.settings.environment = configProcessor.getEnvironment()
-    this.settings.middleware = []
     this.depTree.applyProcessor(function(app,cb){
         configProcessor.loadApp(app,self.settings,cb)
     },function(err){
