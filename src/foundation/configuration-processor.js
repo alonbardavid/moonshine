@@ -36,6 +36,9 @@ module.exports.getEnvironment = function(){
             return parseEnvString(arg.substr(14))
         }
     }
+    if (/.*_mocha/.test(require.main.filename)) {
+        return ["TEST"]
+    }
     if (process.env.MOONSHINE_ENVIRONMENT) {
         return parseEnvString(process.env.MOONSHINE_ENVIRONMENT)
     }

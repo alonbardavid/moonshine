@@ -13,6 +13,7 @@ function AppLoader(logger,middlewareFunctionNames){
     this.mfn.process = this.mfn.process || "process"
     this.mfn.after = this.mfn.after || "after"
     this.mfn.post = this.mfn.post || "post"
+    this.mfn.shutdown = this.mfn.shutdown || "shutdown"
 }
 AppLoader.prototype.defineApp =function(appModule,options){
     options = options || {}
@@ -29,22 +30,37 @@ AppLoader.prototype.defineApp =function(appModule,options){
 }
 
 AppLoader.prototype.start = function(rootApp) {
-    this.depTree = finalizeDepTree(rootApp,Array.prototype.slice.call(arguments,1));
+	var apps = Array.prototype.slice.call(arguments,1)
+	var cb = null;
+	var lastArgument = arguments[arguments.length - 1]
+	if (typeof lastArgument == "function") {
+		cb = lastArgument
+		apps = apps.slice(0, -1)
+	}
+    this.depTree = finalizeDepTree(rootApp,apps);
     this.loadSettings(
-        this.afterLoadSettings) //cb
+        function(err){
+            this.afterLoadSettings(err,cb)
+        }) //cb
 }
-AppLoader.prototype.afterLoadSettings = function(err) {
+AppLoader.prototype.stop = function(cb){
+    this.middlewareLoader.applyMiddlewareFunction(this.mfn.shutdown)(cb)
+}
+AppLoader.prototype.afterLoadSettings = function(err,cb) {
     if (!this.settings.middleware) return; //no middlewares to run
     var self = this;
     if (err) return this.handleError(err)
-    var middlewareLoader = new MiddlwareLoader(this.settings.middleware,this.depTree,this.logger)
+    var middlewareLoader = this.middlewareLoader =new MiddlwareLoader(this.settings.middleware,this.depTree,this.logger)
     async.series(
         [
             middlewareLoader.applyMiddlewareFunction(this.mfn.pre),
             middlewareLoader.applyMiddlewareProcessor(this.mfn.before,this.mfn.process,this.mfn.after),
             middlewareLoader.applyMiddlewareFunction(this.mfn.post)
         ]
-        ,function(err){self.handleError(err)})
+        ,function(err){
+            self.handleError(err)
+            if (cb) cb(err)
+        })
 }
 AppLoader.prototype.handleError = function(err) {
     if (err) {
@@ -59,7 +75,7 @@ AppLoader.prototype.loadSettings = function(cb){
     this.depTree.applyProcessor(function(app,cb){
         configProcessor.loadApp(app,self.settings,cb)
     },function(err){
-        cb.apply(self,err)
+        cb.call(self,err)
     })
 }
 function finalizeDepTree(rootApp,additionalApps) {
