@@ -25,6 +25,7 @@
     "mocha"
   ],
   "dependencies": {
+
   },
   "bundledDependencies":[
     "moonshine-core",
