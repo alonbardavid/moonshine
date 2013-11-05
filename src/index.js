@@ -4,6 +4,6 @@ global.__moonshine_loaded = true;
 
 var moonshineCore = require("moonshine-core")
 
-moonshineCore.apps = moonshineCore.apps.concat(module.filename)
+moonshineCore.addBaseApp(module.filename)
 
 module.exports = moonshineCore
