@@ -1,0 +1,1 @@
+module.exports = require("moonshine-core/helpers")

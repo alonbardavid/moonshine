@@ -20,31 +20,20 @@
     "django",
     "rapid"
   ],
-  "dependencies": {
-    "grunt":"*",
-	"npm":"*",
-	"async":"*",
-	"fs-extra":"*",
-    "optimist":"*",
-    "lograp":"*",
-    "winston":"*",
-    "mongoose":"*",
-    "baucis":"*",
-    "express":"*"
-  },
   "main":"./src",
   "devDependencies": [
     "mocha"
   ],
+  "bundledDependencies":[
+    "moonshine-core",
+    "moonshine-core-base",
+    "moonshine-core-logging",
+    "moonshine-core-persistence",
+    "moonshine-core-server",
+    "moonshine-core-api",
+    "moonshine-core-static"
+  ],
   "scripts": {
-    "test": "mocha --harmony-proxies --recursive --reporter Spec test"
-  },
-  "moonApps": [
-    "./core-apps/base",
-    "./core-apps/logging",
-    "./core-apps/persistence",
-    "./core-apps/server",
-    "./core-apps/api",
-    "./core-apps/static"
-  ]
+    "test": "mocha --harmony-proxies --recursive --reporter Spec node_modules/*/test/*.spec.js"
+  }
 }

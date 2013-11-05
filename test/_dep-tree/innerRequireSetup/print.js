@@ -1,1 +1,0 @@
-module.exports = function(){return "in outer function"}
