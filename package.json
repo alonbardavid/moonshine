@@ -1,6 +1,6 @@
 {
   "name": "moonshine-js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Illniyar",
   "description": "a web framework for rapid development of SPA apps with angular.js,node and mongodb",
 
@@ -24,6 +24,8 @@
   "devDependencies": [
     "mocha"
   ],
+  "dependencies": {
+  },
   "bundledDependencies":[
     "moonshine-core",
     "moonshine-core-base",
