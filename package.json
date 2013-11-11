@@ -50,6 +50,6 @@
     "moonshine": "./bin/moonshine"
   },
   "scripts": {
-    "test": "mocha --harmony-proxies --recursive --reporter Spec node_modules/moonshine*/test/*.spec.js"
+    "test": "mocha --harmony-proxies --recursive --reporter Spec node_modules/moonshine*/test/*.spec.js test"
   }
 }
