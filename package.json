@@ -35,7 +35,8 @@
       "fs-extra":"~0.6.0",
       "optimist":"~0.6.0",
       "require-like":"~0.1.0",
-	  "async":"~0.2"
+	  "async":"~0.2",
+	  "lingo":"~0.0.5"
   },
   "bundledDependencies":[
     "moonshine-core",
