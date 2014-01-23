@@ -5,5 +5,6 @@ module.exports.requiredComponents = [
     "moonshine-core-persistence",
     "moonshine-core-server",
     "moonshine-core-api",
-    "moonshine-core-static"
+    "moonshine-core-static",
+	"moon-contrib-angular"
 ]

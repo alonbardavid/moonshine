@@ -1,6 +1,6 @@
 /node_modules/*
-!/node_modules/moonshine*
-!/node_modules/moonshine*/*
+!/node_modules/moon*
+!/node_modules/moon*/*
 /node_modules/*/node_modules
 
 /.idea
