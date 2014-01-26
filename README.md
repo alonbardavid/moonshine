@@ -3,6 +3,8 @@ moonshine
 
 Moonshine is a web framework for rapid development for SPA (Single Page Application) websites built with the MEAN stack - Mongodb, express.js, angular.js and node.js, inspired by Python's Django framework.
 
+The main purpose behind Moonshine is to create a framework that allows you to create reusable components providing both server-side and client-side functionality in a SPA application.
+
 >**WARNING!!!** Moonshine is in very early Alpha, and should be used with great care.
 
 For those who prefer examples, you can check out the [examples repository](https://github.com/Illniyar/moonshine-examples)
@@ -290,7 +292,15 @@ __*API*__
      * __scriptPrefix__: change script prefix path. defaults to "/js"
      * __disableAutoScriptLoading__: prevent automatic script loading on route change. defaults to false
      * __scriptLocationResolver(stateInfo)__: a function that allows arbitrary path resolution. 
-							
+	
+##Testing
+Moonshine comes with two built in testing support - _Mocha_ and _Karma_ .
+
+* __Mocha__ : if you have _Mocha_ installed in node_modules, and run `moonshine test` all files under the pattern `test/**/*.spec.js` will be run using Mocha.
+* __Karma__ : if you have _Karma_ and _karma-mocha_ installed in node_modules, and run `moonshine test` all files under the pattern `test/**/*.client.js` will be run using Mocha.
+ * you can add a karma.config.js file in your cwd to override default karma config (to use a different test runner or browser for instance)
+ * moonshine automatically adds Angular.js files and any js file under the static folder to the list of served karma files.
+ * you can add testing libraries to `test/client/*.js` and they'll be added as well (for instance if you want to add expect.js or angular mocks, etc...)
 ###Gotchayas:
 * Always add Components to the peerDependencies section of you package.json
 * You need to define Component dependencies in settings.js module.exports.requiredComponents as well as in package.json
@@ -301,6 +311,7 @@ __*API*__
 
   * [User rememberme authentication](https://github.com/Illniyar/moon-contrib-user-rememberme) - Remember me token functionality for moon-contrib-user
 
+  
 Libraries/Frameworks used:
 
 * [Express.js](http://expressjs.com/)
