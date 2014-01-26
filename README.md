@@ -42,6 +42,7 @@ For those who prefer examples, you can check out the [examples repository](https
  * [Static file support](#static-file-support)
  * [Baucis support](#baucis-support)
  * [Angular.js support](#angularjs-support)
+ * [Testing](#testing)
 * [Gotchayas](#gotchayas)
 
 
@@ -293,7 +294,7 @@ __*API*__
      * __disableAutoScriptLoading__: prevent automatic script loading on route change. defaults to false
      * __scriptLocationResolver(stateInfo)__: a function that allows arbitrary path resolution. 
 	
-##Testing
+###Testing
 Moonshine comes with two built in testing support - _Mocha_ and _Karma_ .
 
 * __Mocha__ : if you have _Mocha_ installed in node_modules, and run `moonshine test` all files under the pattern `test/**/*.spec.js` will be run using Mocha.
@@ -301,7 +302,8 @@ Moonshine comes with two built in testing support - _Mocha_ and _Karma_ .
  * you can add a karma.config.js file in your cwd to override default karma config (to use a different test runner or browser for instance)
  * moonshine automatically adds Angular.js files and any js file under the static folder to the list of served karma files.
  * you can add testing libraries to `test/client/*.js` and they'll be added as well (for instance if you want to add expect.js or angular mocks, etc...)
-###Gotchayas:
+
+ ###Gotchayas:
 * Always add Components to the peerDependencies section of you package.json
 * You need to define Component dependencies in settings.js module.exports.requiredComponents as well as in package.json
 
